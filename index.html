@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACO User Acceptance Tests - Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+        }
+        
+        .stat-card.total { border-left-color: #667eea; }
+        .stat-card.finished { border-left-color: #28a745; }
+        .stat-card.pending { border-left-color: #ffc107; }
+        .stat-card.incidents { border-left-color: #dc3545; }
+        
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card .label {
+            color: #6c757d;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+        }
+        
+        .categories {
+            padding: 30px;
+        }
+        
+        .categories h2 {
+            color: #1e3c72;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .category-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+        
+        .category-card h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .category-card .info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .category-card .info-item {
+            text-align: center;
+        }
+        
+        .category-card .info-item .value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .category-card .info-item .label {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        footer {
+            background: #1e3c72;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #28a745, #20c997);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 ACO User Acceptance Tests</h1>
+            <p>Odoo 18 Implementation - Interactive Test Tracking Dashboard</p>
+            <p style="margin-top: 10px; font-size: 0.95em; opacity: 0.95;">✨ All modules now interactive! Check boxes, track incidents, save progress automatically!</p>
+        </header>
+        
+        <div class="stats-container">
+            <div class="stat-card total">
+                <div class="number">9</div>
+                <div class="label">Test Categories</div>
+            </div>
+            <div class="stat-card finished">
+                <div class="number">✨</div>
+                <div class="label">ALL Interactive!</div>
+            </div>
+            <div class="stat-card pending">
+                <div class="number">✓</div>
+                <div class="label">Track Progress</div>
+            </div>
+            <div class="stat-card incidents">
+                <div class="number">🔢</div>
+                <div class="label">Log Incidents</div>
+            </div>
+        </div>
+        
+        <div class="categories">
+            <h2>📋 Test Categories</h2>
+            
+            <div class="category-grid">
+                <a href="sales_module.html" class="category-card">
+                    <h3>🛒 Sales Module</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="info">
+                        <div class="info-item">
+                            <div class="value">6</div>
+                            <div class="label">Scenarios</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">✓</div>
+                            <div class="label">Interactive</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">🔢</div>
+                            <div class="label">Track</div>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="purchase_module.html" class="category-card">
+                    <h3>🛍️ Purchase Module</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="info">
+                        <div class="info-item">
+                            <div class="value">4</div>
+                            <div class="label">Scenarios</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">✓</div>
+                            <div class="label">Interactive</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">🔢</div>
+                            <div class="label">Track</div>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="inventory_module.html" class="category-card">
+                    <h3>📦 Inventory Module</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="info">
+                        <div class="info-item">
+                            <div class="value">5</div>
+                            <div class="label">Scenarios</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">✓</div>
+                            <div class="label">Interactive</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">🔢</div>
+                            <div class="label">Track</div>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="manufacturing_module.html" class="category-card">
+                    <h3>🏭 Manufacturing Module</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="info">
+                        <div class="info-item">
+                            <div class="value">4</div>
+                            <div class="label">Scenarios</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">✓</div>
+                            <div class="label">Interactive</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">🔢</div>
+                            <div class="label">Track</div>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="shopfloor_module.html" class="category-card">
+                    <h3>👷 Shop Floor Module</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="info">
+                        <div class="info-item">
+                            <div class="value">17</div>
+                            <div class="label">Scenarios</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">✓</div>
+                            <div class="label">Interactive</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">🔢</div>
+                            <div class="label">Track</div>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="quality_module.html" class="category-card">
+                    <h3>✅ Quality Module</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="info">
+                        <div class="info-item">
+                            <div class="value">8</div>
+                            <div class="label">Scenarios</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">✓</div>
+                            <div class="label">Interactive</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">🔢</div>
+                            <div class="label">Track</div>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="snyder_scenarios.html" class="category-card">
+                    <h3>🔧 Snyder Tank Scenarios</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="info">
+                        <div class="info-item">
+                            <div class="value">3</div>
+                            <div class="label">Scenarios</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">✓</div>
+                            <div class="label">Interactive</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">🔢</div>
+                            <div class="label">Track</div>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="recertification_scenarios.html" class="category-card">
+                    <h3>🔄 Recertification Service</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="info">
+                        <div class="info-item">
+                            <div class="value">3</div>
+                            <div class="label">Scenarios</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">✓</div>
+                            <div class="label">Interactive</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">🔢</div>
+                            <div class="label">Track</div>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="return_scenarios.html" class="category-card">
+                    <h3>↩️ Customer Returns</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="info">
+                        <div class="info-item">
+                            <div class="value">3</div>
+                            <div class="label">Scenarios</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">✓</div>
+                            <div class="label">Interactive</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="value">🔢</div>
+                            <div class="label">Track</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2026 ACO Container Systems - Odoo 18 Implementation Project</p>
+        </footer>
+    </div>
+</body>
+</html>

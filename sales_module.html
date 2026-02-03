@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛒 Sales Module - ACO UAT Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .page-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .nav-menu {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .nav-header {
+            padding: 15px 20px;
+            font-weight: bold;
+            color: #1e3c72;
+            border-bottom: 2px solid #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .nav-item {
+            display: block;
+            padding: 12px 20px;
+            color: #495057;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background: #f8f9fa;
+            border-left-color: #667eea;
+            color: #667eea;
+        }
+        
+        .nav-item.active {
+            background: #e7f3ff;
+            border-left-color: #667eea;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px 40px;
+        }
+        
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 5px;
+        }
+        
+        header p {
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .btn-light {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .btn-light:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-small {
+            font-size: 0.85em;
+            padding: 6px 12px;
+        }
+        
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            padding: 25px 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stat-item .number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-item .label {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .content {
+            padding: 30px 40px;
+        }
+        
+        .scenario-block {
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+            transition: all 0.3s;
+        }
+        
+        .scenario-block.completed {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+        
+        .scenario-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .scenario-block.completed .scenario-header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+        
+        .scenario-header h3 {
+            font-size: 1.3em;
+        }
+        
+        .scenario-id {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .scenario-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .incident-input {
+            width: 80px;
+            padding: 6px 10px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 5px;
+            background: rgba(255,255,255,0.9);
+            font-size: 0.9em;
+            text-align: center;
+        }
+        
+        .incident-label {
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 0.85em;
+        }
+        
+        .test-steps {
+            padding: 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: #f8f9fa;
+        }
+        
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+            font-size: 0.9em;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f1f3f5;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .step-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #28a745;
+        }
+        
+        .step-row.completed {
+            background: #f0f8f4;
+        }
+        
+        .step-row.completed td:not(:first-child) {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+        
+        .comments {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+        
+        .scenario-info {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .progress-indicator {
+            margin-top: 10px;
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .scenario-block.completed .progress-fill {
+            background: linear-gradient(90deg, #28a745, #20c997);
+        }
+        
+        footer {
+            background: #1e3c72;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .page-wrapper {
+                flex-direction: column;
+            }
+            .nav-menu {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="nav-menu">
+            <div class="nav-header">📋 UAT Categories</div>
+            <a href="index.html" class="nav-item">🏠 Dashboard</a>
+            <a href="sales_module.html" class="nav-item active">🛒 Sales</a>
+            <a href="purchase_module.html" class="nav-item {'active' if module_id == 'purchase' else ''}">🛍️ Purchase</a>
+            <a href="inventory_module.html" class="nav-item {'active' if module_id == 'inventory' else ''}">📦 Inventory</a>
+            <a href="manufacturing_module.html" class="nav-item {'active' if module_id == 'manufacturing' else ''}">🏭 Manufacturing</a>
+            <a href="shopfloor_module.html" class="nav-item {'active' if module_id == 'shopfloor' else ''}">👷 Shop Floor</a>
+            <a href="quality_module.html" class="nav-item {'active' if module_id == 'quality' else ''}">✅ Quality</a>
+            <a href="snyder_scenarios.html" class="nav-item {'active' if module_id == 'snyder' else ''}">🔧 Snyder</a>
+            <a href="recertification_scenarios.html" class="nav-item {'active' if module_id == 'recert' else ''}">🔄 Recertification</a>
+            <a href="return_scenarios.html" class="nav-item {'active' if module_id == 'returns' else ''}">↩️ Returns</a>
+        </div>
+        
+        <div class="main-content">
+            <div class="container">
+                <header>
+                    <h1>🛒 Sales Module</h1>
+                    <p>✓ Check boxes to mark steps complete • 🔢 Enter incident count • Progress saves automatically!</p>
+                    <div class="header-actions">
+                        <button class="btn btn-light" onclick="resetProgress()">🔄 Reset Progress</button>
+                        <button class="btn btn-success" onclick="exportProgress()">💾 Export Progress</button>
+                    </div>
+                </header>
+                
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <div class="number" id="total-scenarios">0</div>
+                        <div class="label">Total Scenarios</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="number" id="completed-scenarios">0</div>
+                        <div class="label">Completed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="number" id="total-steps">0</div>
+                        <div class="label">Total Steps</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="number" id="completion-rate">0%</div>
+                        <div class="label">Completion Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="number" id="total-incidents">0</div>
+                        <div class="label">Total Incidents</div>
+                    </div>
+                </div>
+                
+                <div class="content" id="scenarios-container">
+                    <!-- Scenarios loaded by JavaScript -->
+                </div>
+                
+                <footer>
+                    <p>&copy; 2026 ACO Container Systems - Odoo 18 Implementation Project</p>
+                    <p style="margin-top: 10px; opacity: 0.8; font-size: 0.9em;">✨ Progress saved in your browser - works offline!</p>
+                </footer>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const MODULE_ID = 'sales';
+        const STORAGE_KEY = 'uat_progress_' + MODULE_ID;
+        
+        const SCENARIOS = [
+            {
+                        "id": "S-1.1",
+                        "name": "Create Standard Quote",
+                        "incidents": "3",
+                        "comments": "Need Quick Notes feature, tax setup review needed, PDF save prompt, INCO terms",
+                        "person": "Bill/Washma/Ray",
+                        "steps": [
+                                    "1. Create Quotation",
+                                    "2. Add Customer",
+                                    "3. Add Product: CBO-1000, Qty: 5",
+                                    "4. Send by Email",
+                                    "5. Confirm to Sale Order",
+                                    "Expected: SO created, Delivery Order generated"
+                        ]
+            },
+            {
+                        "id": "S-1.2",
+                        "name": "Standard Tank Sale",
+                        "incidents": "2",
+                        "comments": "Simpler inventory view needed, clarify backorder process",
+                        "person": "Bill/Ray",
+                        "steps": [
+                                    "1. Create SO for ct-300(could be any) tank",
+                                    "2. Check stock availability",
+                                    "3. Confirm Order",
+                                    "4. Check Delivery Order created",
+                                    "Expected: Ready to deliver"
+                        ]
+            },
+            {
+                        "id": "S-2.1",
+                        "name": "Custom Tank Quote",
+                        "incidents": "5",
+                        "comments": "BOM management issues, salesperson field, shipped loose parts representation, drawing attachments",
+                        "person": "Bill Murray",
+                        "steps": [
+                                    "1. Create Quote for custom DMT-2205",
+                                    "2. Attach customer drawing",
+                                    "3. Add special fittings to quote",
+                                    "4. Send for customer approval",
+                                    "5. Customer approves ? Convert to SO",
+                                    "Expected: Custom order ready for production"
+                        ]
+            },
+            {
+                        "id": "S-2.2",
+                        "name": "ORDER ON HOLD",
+                        "incidents": "",
+                        "comments": "",
+                        "person": "",
+                        "steps": [
+                                    "1. Create SO for custom tank",
+                                    "2. Customer requests change",
+                                    "3. Put Order on Hold (Lock)",
+                                    "4. Update specifications",
+                                    "5. Update drawing",
+                                    "6. Get customer re-approval",
+                                    "8. Update delivery date",
+                                    "7. Remove Hold",
+                                    "Expected: Order modified, new date set"
+                        ]
+            },
+            {
+                        "id": "S-3.1",
+                        "name": "Mid-Production Change",
+                        "incidents": "",
+                        "comments": "",
+                        "person": "",
+                        "steps": [
+                                    "1. SO confirmed, production started",
+                                    "2. Customer calls with urgent change",
+                                    "3. Lock SO and all related documents",
+                                    "4. Stop Manufacturing Order",
+                                    "5. Update BoM if needed",
+                                    "6. Update drawing",
+                                    "7. Calculate new costs",
+                                    "8. Get customer approval on price/date",
+                                    "9. Unlock and restart production",
+                                    "Expected: Change managed without errors"
+                        ]
+            },
+            {
+                        "id": "S-3.2",
+                        "name": "IBC with UN Certification",
+                        "incidents": "",
+                        "comments": "",
+                        "person": "",
+                        "steps": [
+                                    "1. Create SO for 10 x PTC-275 (IBC)",
+                                    "2. Specify UN certification required",
+                                    "3. Add dangerous goods requirements",
+                                    "4. System enforces leak test",
+                                    "5. UN markings mandatory",
+                                    "Expected: Compliance requirements enforced",
+                                    "Test Steps",
+                                    "1. Create RFQ for 10,000 lbs resin",
+                                    "2. Send to Supplier",
+                                    "3. Confirm Purchase Order",
+                                    "4. Receive Products",
+                                    "5. Validate Receipt",
+                                    "Expected: Stock updated in WH/Stock",
+                                    "1. Create PO for flanges (multiple sizes)",
+                                    "2. Receive partial delivery",
+                                    "3. Receive remaining",
+                                    "Expected: Backorder managed correctly",
+                                    "1. Receive Parts Requisition (from production)",
+                                    "2. Check what's in stock",
+                                    "3. Create PO for missing items",
+                                    "4. Link PO to Manufacturing Order",
+                                    "Expected: Parts ordered for production",
+                                    "Test Steps",
+                                    "1. Transfer resin from WH/Stock to WH/Production",
+                                    "2. Transfer finished tank from WH/Production to WH/Stock",
+                                    "3. Validate movements",
+                                    "Expected: Stock in correct locations",
+                                    "1. Receive Snyder tank",
+                                    "2. Record Serial: SN2024-001",
+                                    "3. Track through system",
+                                    "Expected: Serial visible in stock",
+                                    "1. Receive products",
+                                    "2. Quality inspection fails",
+                                    "3. Move to WH/Quarantine",
+                                    "4. Create Quality Alert",
+                                    "5. Decision: Return to Vendor",
+                                    "6. Move to WH/RTV",
+                                    "Expected: Non-conforming items isolated",
+                                    "1. Receive customer's valve",
+                                    "2. Create CSM number: CSM-2024-001",
+                                    "3. Link to Sales order",
+                                    "4. Store in designated area",
+                                    "5. Issue to production when needed",
+                                    "Expected: CSM tracked separately",
+                                    "1. Receive at WH/IN",
+                                    "2. Move to WH/Stock",
+                                    "3. Pick for production ? Prod",
+                                    "4. After production ? WH/Stock/Finished",
+                                    "5. Quality inspection",
+                                    "6. If pass ? WH/Stock",
+                                    "7. If fail ? WH/Quarantine",
+                                    "8. Ship from WH/OUT",
+                                    "Expected: Full tracking through all locations",
+                                    "Test Steps",
+                                    "1. Create MO for CBO-1000",
+                                    "2. Check BoM (150 lbs resin, 1 lid, 2 fittings)",
+                                    "3. Check material availability",
+                                    "4. Mark as Done",
+                                    "5. Record production",
+                                    "Expected: Tank in stock",
+                                    "1. Create MO for custom tank",
+                                    "2. Attach drawing",
+                                    "3. Add operations: Molding ? Trimming ? Fabrication",
+                                    "4. Complete each operation",
+                                    "5. Record time at each step",
+                                    "Expected: Multi-step production complete",
+                                    "1. Complete molding",
+                                    "2. Quality Check #1 (visual)",
+                                    "3. Complete trimming",
+                                    "4. Quality Check #2 (dimensions)",
+                                    "5. Complete fabrication",
+                                    "6. Water test (30 min)",
+                                    "7. Final QC approval",
+                                    "Expected: All quality gates passed",
+                                    "1. Create MO for IBC (PTC-270)",
+                                    "2. Mold bottle (275 lbs resin)",
+                                    "3. Hot stamp serial: SN2024-100",
+                                    "4. Complete trimming",
+                                    "5. Move to assembly station",
+                                    "6. Perform leak test",
+                                    "7. Record on ITP Report",
+                                    "8. Install in frame",
+                                    "9. Attach UN plate",
+                                    "10. Punch serial on metal plate",
+                                    "Expected: Complete IBC with documentation",
+                                    "Test Steps",
+                                    "1. Open Shop Floor on tablet",
+                                    "2. Worker scans badge/enters PIN",
+                                    "3. View assigned work orders",
+                                    "4. See today's schedule",
+                                    "Expected: Personal worklist displayed",
+                                    "1. Select Manufacturing Order",
+                                    "2. Click \"Start Working\"",
+                                    "3. Timer begins automatically",
+                                    "4. Status changes to \"In Progress\"",
+                                    "Expected: Time tracking started",
+                                    "1. Complete molding operation",
+                                    "2. Enter quantity produced: 10",
+                                    "3. Enter scrap quantity: 1",
+                                    "4. Click \"Done\"",
+                                    "Expected: Production recorded",
+                                    "1. Complete molding operation",
+                                    "2. System shows \"Quality Check Required\"",
+                                    "3. Perform visual inspection",
+                                    "4. Record: Pass/Fail",
+                                    "5. If Pass ? Continue to trimming",
+                                    "6. If Fail ? Move to scrap",
+                                    "Expected: Quality gate enforced",
+                                    "1. After molding CBO-1000",
+                                    "2. Click \"Add Serial Number\"",
+                                    "3. Hot stamp tank: SN2024-12-001",
+                                    "4. Enter serial in tablet",
+                                    "5. Print production sticker (QFO-7.5-1)",
+                                    "6. Apply sticker to tank",
+                                    "Expected: Serial tracked from production",
+                                    "1. Custom tank reaches water test station",
+                                    "2. Fill tank with water",
+                                    "3. Start 30-minute timer on tablet",
+                                    "4. Check for leaks",
+                                    "5. Record result: Pass/Fail",
+                                    "6. If Pass ? Continue",
+                                    "7. If Fail ? Create Quality Alert",
+                                    "Expected: Test documented digitally",
+                                    "1. Start IBC work order",
+                                    "2. Step 1: Molding",
+                                    "- Record oven time: 4 hours",
+                                    "- Record resin used: 275 lbs",
+                                    "3. Step 2: Trimming",
+                                    "- Time: 30 minutes",
+                                    "- Quality check: dimensions",
+                                    "4. Step 3: Assembly Station",
+                                    "- Install valves",
+                                    "- Perform leak test",
+                                    "- Record on digital ITP form",
+                                    "5. Step 4: Frame Installation",
+                                    "- Place bottle in frame",
+                                    "- Attach UN plate",
+                                    "- Punch serial number",
+                                    "Expected: Complete IBC tracked through all steps",
+                                    "1. View customer drawing on tablet",
+                                    "2. Molding station:",
+                                    "- Scan BoM barcode",
+                                    "- Confirm materials",
+                                    "- Start production",
+                                    "3. Fabrication station:",
+                                    "- View fitting locations on drawing",
+                                    "- Install custom fittings",
+                                    "- Take photo of completed work",
+                                    "4. Quality station:",
+                                    "- Perform water test",
+                                    "- Upload test results",
+                                    "Expected: Custom requirements followed",
+                                    "1. Start work order",
+                                    "2. Scan resin barcode",
+                                    "3. System shows \"Insufficient Material\"",
+                                    "4. Alert sent to warehouse",
+                                    "5. Worker selects \"Wait\" or \"Cancel\"",
+                                    "6. If Wait ? Order paused",
+                                    "7. Material delivered",
+                                    "8. Resume production",
+                                    "Expected: Shortage handled without leaving floor",
+                                    "1. During molding operation",
+                                    "2. Click \"Report Issue\"",
+                                    "3. Select: \"Oven malfunction\"",
+                                    "4. Maintenance request created",
+                                    "5. Work order automatically paused",
+                                    "6. Reassign to different oven",
+                                    "Expected: Downtime tracked, work reassigned",
+                                    "1. Complete trimming",
+                                    "2. QC check fails (crack detected)",
+                                    "3. Click \"Reject\"",
+                                    "4. Select reason: \"Molding defect\"",
+                                    "5. Take photo of defect",
+                                    "6. Tank moved to quarantine",
+                                    "7. NCR automatically created",
+                                    "Expected: Rejection documented with evidence",
+                                    "1. Worker producing custom tank",
+                                    "2. Supervisor gets change notification",
+                                    "3. Click \"Hold Order\" on supervisor tablet",
+                                    "4. All stations see \"ON HOLD\" alert",
+                                    "5. Workers stop immediately",
+                                    "6. Updated drawing pushed to tablets",
+                                    "7. Supervisor releases hold",
+                                    "8. Workers see new specifications",
+                                    "9. Continue with changes",
+                                    "Expected: Real-time hold across shop floor",
+                                    "1. Day shift worker at 85% complete",
+                                    "2. Click \"End Shift\"",
+                                    "3. Add notes: \"Leak test remaining\"",
+                                    "4. Night shift worker logs in",
+                                    "5. Sees incomplete work order",
+                                    "6. Reads handover notes",
+                                    "7. Continues from leak test",
+                                    "Expected: Seamless shift transition",
+                                    "1. MO for 20 tanks",
+                                    "2. After each tank molded:",
+                                    "- Auto-generate serial (SN2024-12-XXX)",
+                                    "- Print label automatically",
+                                    "- Worker applies label",
+                                    "- Scan to confirm",
+                                    "3. Complete all 20",
+                                    "4. Batch complete notification",
+                                    "Expected: Efficient serial management",
+                                    "Test Steps",
+                                    "1. Start MO for 10 tanks",
+                                    "2. Only enough resin for 8",
+                                    "3. System alerts shortage",
+                                    "4. Create urgent PO",
+                                    "5. Partial production of 8",
+                                    "6. Wait for delivery",
+                                    "7. Complete remaining 2",
+                                    "Expected: Partial production handled",
+                                    "1. Customer reports leak",
+                                    "2. Create RMA# R25-12-01",
+                                    "3. Receive returned tank",
+                                    "4. QC inspection",
+                                    "5. Create NCR",
+                                    "6. Root cause analysis",
+                                    "7. Check if batch affected",
+                                    "8. Customer notification if needed",
+                                    "9. Replacement order",
+                                    "10. Corrective action",
+                                    "Expected: Full complaint resolution",
+                                    "1. Parent SO on hold",
+                                    "2. Check linked Manufacturing Orders",
+                                    "3. Check linked Purchase Orders",
+                                    "4. Check scheduled deliveries",
+                                    "5. Put all related documents on hold",
+                                    "6. Notify all departments",
+                                    "7. After approval, release all holds",
+                                    "8. Reschedule everything",
+                                    "Expected: All dependencies managed",
+                                    "Test Steps",
+                                    "1. Quote for 20 custom IBCs",
+                                    "2. Customer approves with changes",
+                                    "3. Create SO",
+                                    "4. Generate Parts Requisition",
+                                    "5. Create POs for missing parts",
+                                    "6. Receive materials",
+                                    "7. Start production",
+                                    "8. Customer requests change (HOLD)",
+                                    "9. Update specs and restart",
+                                    "10. Complete molding with serials",
+                                    "11. Assembly and leak tests",
+                                    "12. Apply UN certification",
+                                    "13. Final QC",
+                                    "14. Ship with dangerous goods docs",
+                                    "15. Invoice",
+                                    "Expected: Complex order with change completed",
+                                    "1. Sales: Confirm urgent order",
+                                    "2. Planning: MO auto-created",
+                                    "3. Shop Floor: Priority order appears red",
+                                    "4. Worker starts immediately",
+                                    "5. Real-time progress visible to sales",
+                                    "Expected: Urgent order prioritized",
+                                    "1. Shop Floor: Worker needs special fitting",
+                                    "2. Creates material request on tablet",
+                                    "3. Purchase: Receives requisition",
+                                    "4. Creates emergency PO",
+                                    "5. Shop Floor: Gets ETA notification",
+                                    "Expected: Material request streamlined",
+                                    "1. Shop Floor: Tank fails leak test",
+                                    "2. Quality Alert created",
+                                    "3. Quality: Investigates issue",
+                                    "4. Identifies batch problem",
+                                    "5. Shop Floor: All related MOs flagged",
+                                    "6. Extra inspection required",
+                                    "7. Sales: Customer notified of delay",
+                                    "Expected: Quality issue managed across modules",
+                                    "Test Steps",
+                                    "1. Create SO for modified Snyder DCT-10440",
+                                    "2. Add product with route: \"Buy + Manufacture\"",
+                                    "3. Add 3 custom fittings as SO lines",
+                                    "4. Confirm SO ? System creates RFQ",
+                                    "5. Confirm PO to Snyder (14-day lead)",
+                                    "6. Receive tank, record serial: SNY-2024-XXX",
+                                    "7. System auto-creates MO for fabrication",
+                                    "8. Shop Floor: Install fittings per drawing",
+                                    "9. Quality: 30-min water test",
+                                    "10. Complete production",
+                                    "11. Deliver to customer",
+                                    "Expected: Purchased tank modified and delivered",
+                                    "1. Create MO for PTC-275",
+                                    "2. BoM shows Snyder frame needed",
+                                    "3. System creates PO for frame",
+                                    "4. Receive frame with UN docs",
+                                    "5. Quality inspection of frame",
+                                    "6. Shop Floor: Assemble IBC",
+                                    "7. Attach Snyder UN plate",
+                                    "Expected: External components integrated",
+                                    "1. Customer RMA for Snyder tank",
+                                    "2. Receive to WH/Quarantine",
+                                    "3. Confirm vendor defect",
+                                    "4. Create Vendor Return (Odoo)",
+                                    "5. Get Snyder RMA number",
+                                    "6. Ship back to vendor",
+                                    "7. Receive replacement",
+                                    "8. Ship to customer",
+                                    "Expected: Vendor warranty processed",
+                                    "Test Steps",
+                                    "1. Create Service type product \"IBC Recert\"",
+                                    "2. Create SO (Service, not Sale)",
+                                    "3. Receive customer's IBC",
+                                    "4. Create MO for recertification:",
+                                    "- Consume: New bottle (275 lbs resin)",
+                                    "- Consume: Valve kit",
+                                    "- Operation: Leak test",
+                                    "5. Generate UN certificate",
+                                    "6. Invoice service + materials",
+                                    "Expected: Service order with material consumption",
+                                    "1. Create blanket SO for 25 IBCs",
+                                    "2. Set delivery schedule (5/week)",
+                                    "3. Create recurring MOs",
+                                    "4. Track material consumption",
+                                    "5. Handle exceptions (3 fail)",
+                                    "6. Quote additional repairs",
+                                    "7. Monthly consolidated invoice",
+                                    "Expected: Recurring service managed",
+                                    "1. Receive IBC for recert",
+                                    "2. Inspection fails (frame damage)",
+                                    "3. Put MO on hold",
+                                    "4. Create quotation for options:",
+                                    "- New IBC",
+                                    "- Frame replacement",
+                                    "- Return as-is",
+                                    "5. Customer approves option",
+                                    "6. Execute chosen option",
+                                    "Expected: Service exceptions handled",
+                                    "Test Steps",
+                                    "1. Create Return (Odoo Stock module)",
+                                    "2. Generate RMA# R25-12-01",
+                                    "3. Email return label",
+                                    "4. Receive to WH/Quarantine",
+                                    "5. Quality inspection",
+                                    "6. Create Credit Note",
+                                    "7. Ship replacement from stock",
+                                    "8. Scrap defective unit",
+                                    "Expected: Return ? Replace ? Credit",
+                                    "1. Create Return for wrong item",
+                                    "2. Create new DO for correct item",
+                                    "3. Receive return (inspect condition)",
+                                    "4. Return to saleable stock",
+                                    "5. Apply discount on invoice",
+                                    "Expected: Error corrected with compensation",
+                                    "1. Identify affected batch in Odoo",
+                                    "2. Run \"Where Used\" report",
+                                    "3. Generate batch RMAs",
+                                    "4. Send recall notices (mass mailing)",
+                                    "5. Track returns by customer",
+                                    "6. Priority production for replacements",
+                                    "7. Vendor claim if applicable",
+                                    "Expected: Systematic recall managed",
+                                    "Test Steps",
+                                    "1. Receive purchased product\n2. Verify against PO and packing slip\n3. Inspect for defects/discrepancies\n4. Pass ? Move to stock location\n5. Fail ? Notify Purchasing, create NCR\nExpected: Incoming inspection recorded in Odoo",
+                                    "1. Tank de-molded and transferred to QC station\n2. Visual inspection (thin walls, cracks, black spots, bubbles)\n3. Check parting lines and collar alignment\n4. Pass ? Apply green sticker, assign serial number\n5. Fail ? Yellow sticker, create NCR\nExpected: QC-1 checkpoint enforced",
+                                    "1. Custom tank reaches water test station\n2. Fill tank, start 30-min timer\n3. Check for leaks\n4. Record result: Pass/Fail\n5. Pass ? Continue to Final Inspection\n6. Fail ? Create NCR, move to quarantine\nExpected: Water test documented (QFO-7.5-8)",
+                                    "1. IBC ready for final QC\n2. Verify UN markings on bottle and frame match\n3. Check serial numbers (bottle, frame, PIC sticker)\n4. Review ITP Report sheet\n5. Verify air leak test completed\n6. Check stacking load stickers\nExpected: ITP Report completed, UN compliance verified",
+                                    "1. Order appears on shipping list\n2. Verify product matches Order Confirmation\n3. Check fittings, frame color, special markings\n4. Sign off Production Inspection Sticker (Point 6)\n5. Note serial numbers on packing slip\n6. Release for shipping\nExpected: Final QC sign-off in Odoo",
+                                    "1. Non-conformance detected at any stage\n2. Create NCR (QFO-8.3-1) in Odoo\n3. Review at morning meeting\n4. Determine disposition (rework, scrap, return)\n5. If severe ? Initiate CAPA\n6. Close NCR with resolution\nExpected: NCR workflow complete",
+                                    "1. Shop floor reports defect (leak, crack)\n2. Quality Alert auto-created in Odoo\n3. QC investigates root cause\n4. Check if batch affected\n5. Flag related MOs if needed\n6. Document corrective action\nExpected: Quality alert tracked and resolved",
+                                    "1. View list of monitoring/measuring devices\n2. Check calibration due dates\n3. Schedule calibration with approved supplier\n4. Receive certificate of conformance\n5. Update calibration record in Odoo\nExpected: Calibration compliance tracked"
+                        ]
+            }
+];
+        
+        function loadProgress() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            return saved ? JSON.parse(saved) : {};
+        }
+        
+        function saveProgress(progress) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+            updateStats();
+        }
+        
+        function toggleStep(scenarioId, stepIndex) {
+            const progress = loadProgress();
+            if (!progress[scenarioId]) {
+                progress[scenarioId] = { steps: {}, incidents: 0 };
+            }
+            progress[scenarioId].steps[stepIndex] = !progress[scenarioId].steps[stepIndex];
+            saveProgress(progress);
+            
+            const row = document.querySelector(`[data-scenario="${scenarioId}"][data-step="${stepIndex}"]`);
+            if (row) {
+                row.classList.toggle('completed', progress[scenarioId].steps[stepIndex]);
+            }
+            
+            updateScenarioProgress(scenarioId);
+        }
+        
+        function updateIncidents(scenarioId, value) {
+            const progress = loadProgress();
+            if (!progress[scenarioId]) {
+                progress[scenarioId] = { steps: {}, incidents: 0 };
+            }
+            progress[scenarioId].incidents = parseInt(value) || 0;
+            saveProgress(progress);
+        }
+        
+        function markScenarioDone(scenarioId) {
+            const progress = loadProgress();
+            const scenario = SCENARIOS.find(s => s.id === scenarioId);
+            if (!scenario) return;
+            
+            if (!progress[scenarioId]) {
+                progress[scenarioId] = { steps: {}, incidents: 0 };
+            }
+            
+            for (let i = 0; i < scenario.steps.length; i++) {
+                progress[scenarioId].steps[i] = true;
+            }
+            
+            progress[scenarioId].completed = true;
+            progress[scenarioId].completedDate = new Date().toISOString();
+            
+            saveProgress(progress);
+            
+            document.querySelectorAll(`[data-scenario="${scenarioId}"]`).forEach(row => {
+                row.classList.add('completed');
+                const checkbox = row.querySelector('.step-checkbox');
+                if (checkbox) checkbox.checked = true;
+            });
+            
+            updateScenarioProgress(scenarioId);
+            showToast('✅ Scenario marked as complete!');
+        }
+        
+        function updateScenarioProgress(scenarioId) {
+            const progress = loadProgress();
+            const block = document.querySelector(`[data-scenario-block="${scenarioId}"]`);
+            const steps = document.querySelectorAll(`[data-scenario="${scenarioId}"]`);
+            
+            if (!block || !steps.length) return;
+            
+            const completedSteps = Array.from(steps).filter(step => 
+                step.classList.contains('completed')
+            ).length;
+            
+            const percentage = (completedSteps / steps.length) * 100;
+            const progressBar = block.querySelector('.progress-fill');
+            if (progressBar) {
+                progressBar.style.width = percentage + '%';
+            }
+            
+            if (percentage === 100) {
+                block.classList.add('completed');
+            } else {
+                block.classList.remove('completed');
+            }
+        }
+        
+        function updateStats() {
+            const progress = loadProgress();
+            const totalScenarios = SCENARIOS.length;
+            
+            let completedScenarios = 0;
+            let totalSteps = 0;
+            let completedSteps = 0;
+            let totalIncidents = 0;
+            
+            SCENARIOS.forEach(scenario => {
+                totalSteps += scenario.steps.length;
+                
+                const scenarioProgress = progress[scenario.id];
+                if (scenarioProgress) {
+                    if (scenarioProgress.steps) {
+                        const completed = Object.values(scenarioProgress.steps).filter(v => v).length;
+                        completedSteps += completed;
+                        
+                        if (completed === scenario.steps.length) {
+                            completedScenarios++;
+                        }
+                    }
+                    totalIncidents += scenarioProgress.incidents || 0;
+                }
+            });
+            
+            document.getElementById('total-scenarios').textContent = totalScenarios;
+            document.getElementById('completed-scenarios').textContent = completedScenarios;
+            document.getElementById('total-steps').textContent = totalSteps;
+            document.getElementById('total-incidents').textContent = totalIncidents;
+            
+            const rate = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
+            document.getElementById('completion-rate').textContent = rate + '%';
+        }
+        
+        function renderScenarios() {
+            const container = document.getElementById('scenarios-container');
+            const progress = loadProgress();
+            
+            container.innerHTML = SCENARIOS.map(scenario => {
+                const stepsHtml = scenario.steps.map((step, idx) => {
+                    const isCompleted = progress[scenario.id]?.steps?.[idx] || false;
+                    return `
+                        <tr class="step-row ${isCompleted ? 'completed' : ''}" data-scenario="${scenario.id}" data-step="${idx}">
+                            <td style="width: 40px;">
+                                <input type="checkbox" class="step-checkbox" 
+                                       ${isCompleted ? 'checked' : ''}
+                                       onchange="toggleStep('${scenario.id}', ${idx})">
+                            </td>
+                            <td>${step}</td>
+                        </tr>
+                    `;
+                }).join('');
+                
+                const savedIncidents = progress[scenario.id]?.incidents || 0;
+                const commentsHtml = scenario.comments 
+                    ? `<div class="comments">💬 ${scenario.comments}</div>` 
+                    : '';
+                
+                return `
+                    <div class="scenario-block" data-scenario-block="${scenario.id}">
+                        <div class="scenario-header">
+                            <div style="flex: 1;">
+                                <span class="scenario-id">${scenario.id}</span>
+                                <h3 style="display: inline; margin-left: 15px;">${scenario.name}</h3>
+                            </div>
+                            <div class="scenario-actions">
+                                <span class="incident-label">⚠️ Incidents:</span>
+                                <input type="number" min="0" class="incident-input" 
+                                       value="${savedIncidents}"
+                                       onchange="updateIncidents('${scenario.id}', this.value)"
+                                       placeholder="0">
+                                <button class="btn btn-success btn-small" onclick="markScenarioDone('${scenario.id}')">
+                                    ✓ Mark Done
+                                </button>
+                            </div>
+                        </div>
+                        <div class="test-steps">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40px;">✓</th>
+                                        <th>Test Step</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${stepsHtml}
+                                </tbody>
+                            </table>
+                            <div class="scenario-info">
+                                <strong>👤 Person:</strong> ${scenario.person || 'Not assigned'}
+                                ${commentsHtml}
+                                <div class="progress-indicator">
+                                    <div class="progress-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            SCENARIOS.forEach(scenario => updateScenarioProgress(scenario.id));
+        }
+        
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset ALL progress for this module? This cannot be undone!')) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        }
+        
+        function exportProgress() {
+            const progress = loadProgress();
+            const dataStr = JSON.stringify(progress, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `uat_progress_${MODULE_ID}_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            showToast('💾 Progress exported!');
+        }
+        
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            renderScenarios();
+            updateStats();
+        });
+    </script>
+</body>
+</html>
